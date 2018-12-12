@@ -40,8 +40,16 @@ const server = net.createServer(socket => {
             }
         }
     })
+
     socket.on('close', () => {
+        // 使用ctrl + ] 进入telnet命令行后输入quit命令断开链接
         count--
+        delete users[nickname]
+        if (JSON.stringify(users) !== '{}') {
+            Object.values(users).map(item => {
+                item.write('\033[90m > ' + nickname + ' left this room.\033[39m\n')
+            })
+        }
     })
 })
 
